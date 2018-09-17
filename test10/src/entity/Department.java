@@ -3,17 +3,8 @@ package entity;
 public class Department {
 	private Integer id;
 	private String name;
-	private int empCount;
-	private Project pro;
+	private Integer empCount;
 	
-	public Project getPro() {
-		return pro;
-	}
-
-	public void setPro(Project pro) {
-		this.pro = pro;
-	}
-
 	public Integer getId() {
 		return id;
 	}
@@ -30,11 +21,11 @@ public class Department {
 		this.name = name;
 	}
 
-	public int getEmpCount() {
+	public Integer getEmpCount() {
 		return empCount;
 	}
 
-	public void setEmpCount(int empCount) {
+	public void setEmpCount(Integer empCount) {
 		this.empCount = empCount;
 	}
 }

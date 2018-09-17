@@ -37,9 +37,9 @@ public class DepartmentDao extends BaseDao {
 	}
 
 	public boolean delete(int id) {
-		boolean flag = false;
 		Connection conn = null;
 		PreparedStatement pstat = null;
+		int rs = 0;
 		try {
 			conn = getConnection();
 			//ÊÂÎñ
@@ -48,24 +48,21 @@ public class DepartmentDao extends BaseDao {
 			String sql = "delete from department where id = ?";
 			pstat = conn.prepareStatement(sql);
 			pstat.setInt(1, id);
-			int rs = pstat.executeUpdate();
+			rs += pstat.executeUpdate();
 			
 			pstat.close();
 			sql="update employee set d_id=null where d_id=? ";
 			pstat = conn.prepareStatement(sql);
 			pstat.setInt(1, id);
-			rs = pstat.executeUpdate();
+			rs += pstat.executeUpdate();
 			
 			pstat.close();
 			sql="delete from r_dep_pro  where d_id=? ";
 			pstat = conn.prepareStatement(sql);
 			pstat.setInt(1, id);
-			rs = pstat.executeUpdate();
+			rs += pstat.executeUpdate();
 			
 			conn.commit();
-			if (rs > 0) {
-				flag = true;
-			}
 			// 7¹Ø±Õ
 
 		} catch (SQLException e) {
@@ -74,7 +71,7 @@ public class DepartmentDao extends BaseDao {
 		} finally {
 			closeAll(conn, pstat, null);
 		}
-		return flag;
+		return rs > 0;
 	}
 
 	public boolean deleteBatch(String ids) {
@@ -211,7 +208,7 @@ public class DepartmentDao extends BaseDao {
 			if (condition.getName() != null && !condition.getName().equals("")) {
 				where += " and name='" + condition.getName() + "'";
 			}
-			if (condition.getEmpCount() != -1) {
+			if (condition.getEmpCount() != null) {
 				where += " and ifnull(emp_count,0)=" + condition.getEmpCount();
 			}
 			String sql = "select * from department " + where + " limit " + begin + "," + size;
@@ -247,7 +244,7 @@ public class DepartmentDao extends BaseDao {
 			if (condition.getName() != null && !condition.getName().equals("")) {
 				where += " and name='" + condition.getName() + "'";
 			}
-			if (condition.getEmpCount() != -1) {
+			if (condition.getEmpCount() != null) {
 				where += " and ifnull(emp_count,0)=" + condition.getEmpCount();
 			}
 			String sql = "select count(*) from department " + where;

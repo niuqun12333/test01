@@ -28,10 +28,10 @@ public class EmployeeDao extends BaseDao {
 			if (condition.getSex() != null && !condition.getSex().equals("")) {
 				where += " and sex='" + condition.getSex() + "'";
 			}
-			if (condition.getAge() != -1) {
+			if (condition.getAge() != null) {
 				where += " and age=" + condition.getAge();
 			}
-			if (condition.getDep().getId() != -1) {
+			if (condition.getDep() != null && condition.getDep().getId() != null) {
 				where += " and d_id=" + condition.getDep().getId();
 			}
 			String sql = "select e.*,d.name as dName,emp_count from employee as e LEFT JOIN  department as d on e.d_id=d.id  "
@@ -78,10 +78,10 @@ public class EmployeeDao extends BaseDao {
 			if (condition.getSex() != null && !condition.getSex().equals("")) {
 				where += " and sex='" + condition.getSex() + "'";
 			}
-			if (condition.getAge() != -1) {
+			if (condition.getAge() != null) {
 				where += " and age=" + condition.getAge();
 			}
-			if (condition.getDep().getId() != -1) {
+			if (condition.getDep() != null && condition.getDep().getId() != null) {
 				where += " and d_id=" + condition.getDep().getId();
 			}
 			String sql = "select count(*) from employee as e LEFT JOIN  department as d on e.d_id=d.id  " + where;

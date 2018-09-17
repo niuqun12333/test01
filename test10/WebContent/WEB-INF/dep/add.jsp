@@ -11,7 +11,7 @@
 	margin: 20px auto;
 }
 </style>
-<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+<%@include file="../common.jsp" %>
 </head>
 <body>
 	<!--  <form action="emp" method="post">
@@ -22,8 +22,7 @@
 		<input type="submit" value="保存" />
 	</form>-->
 	<div id="main">
-		<form action="dep" method="post" class="form-horizontal" role="form">
-			<input type="hidden" name="type" value="add" />
+		<form action="add.do" method="post" class="form-horizontal" role="form">
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">部门</label>
 				<div class="col-sm-10">

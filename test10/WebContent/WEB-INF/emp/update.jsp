@@ -17,12 +17,13 @@
 	height: 100px;
 }
 </style>
-<script src="js/jquery.js"></script>
+<link href="<%=request.getContextPath()%>/bootstrap/css/bootstrap.css" rel="stylesheet" />
+<script src="<%=request.getContextPath()%>/js/jquery.js"></script>  
 <script type="text/javascript">
 	$().ready(function() {
 		function filedelete(fileName) {
 			$.ajax({
-				url : "emp?type=filedelete",
+				url : "filedelete.do",
 				type : "post",
 				data : {
 					picture : fileName
@@ -37,15 +38,15 @@
 				}
 			})
 		}
-		var del="";
-		var del2 = "${emp.picture}";
+		var del = "";
+		var del2 = "";
 		$("#upload").click(function() {
 			var formData = new FormData();//模拟出一个表单
-			for (var i = 0; i < $("[name=picture]")[0].files.length; i++) {
-				formData.append("picture", $("[name=picture]")[0].files[i]);
+			for (var i = 0; i < $("[name=file]")[0].files.length; i++) {
+				formData.append("file", $("[name=file]")[0].files[i]);
 			}
 			$.ajax({
-				url : "emp?type=upload",
+				url : "upload.do",
 				type : "post",
 				data : formData,
 				cache : false,
@@ -54,28 +55,32 @@
 				dataType : "text",
 				success : function(data) {
 					$("#pictures [name=photo]").attr("value", data);
-					$("#pictures img").attr("src", "pic/" + data);
+					$("#pictures img").attr("src", "<%=request.getContextPath()%>/pic/" + data);
 					if (del == "") {
-						filedelete(del2);
-						del = data;  
-					}else{
+						if (del2 != "") {
+							filedelete(del2);
+						}
+						del = data;
+					} else {
 						filedelete(del);
-						del="";
+						del = "";
 						del2 = data;
 					}
 				}
 			})
 		})
+		$("#saveBtn").click(function(){
+			filedelete("${emp.picture}")
+		})
 
 	})
 </script>
-<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
 </head>
 <body>
 	<div id="main">
-		<form action="emp" method="post" class="form-horizontal" role="form">
-			<input type="hidden" name="type" value="update" /> <input
-				type="hidden" name="id" value="${emp.id}" />
+		<form action="update.do" method="post" class="form-horizontal"
+			role="form">
+			<input type="hidden" name="id" value="${emp.id}" />
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">姓名</label>
 				<div class="col-sm-10">
@@ -100,9 +105,9 @@
 				</div>
 			</div>
 			<div class="form-group">
-				<label for="d_id" class="col-sm-2 control-label">部门</label>
+				<label for="dep.id" class="col-sm-2 control-label">部门</label>
 				<div class="col-sm-10">
-					<select name="d_id" class="form-control">
+					<select name="dep.id" class="form-control">
 						<option value="">请输入部门</option>
 						<c:forEach items="${depList}" var="dlist">
 							<option value="${dlist.id}"
@@ -114,21 +119,22 @@
 			<div class="form-group">
 				<label for="picture" class="col-sm-2 control-label">图片</label>
 				<div class="col-sm-7 ">
-					<input type="file" value="选择图片" name="picture" class="form-control" />
+					<input type="file" value="选择图片" name="file" class="form-control" />
 				</div>
-				<!-- multiple -->
+
 				<div class="col-sm-3">
 					<input type="button" value="上传" id="upload"
 						class="form-control btn-primary" />
 				</div>
 			</div>
 			<div class="form-group" id="pictures">
-				<img src="pic/${emp.picture}" /> <input type="hidden" name="photo"
+				<img src="<%=request.getContextPath()%>/pic/${emp.picture}" /> <input type="hidden" name="photo"
 					value="${emp.picture}" />
 			</div>
+			<!-- multiple -->
 			<div class="form-group">
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-primary">保存</button>
+					<button type="submit" class="btn btn-primary" id="saveBtn">保存</button>
 				</div>
 			</div>
 		</form>

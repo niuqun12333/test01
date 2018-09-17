@@ -57,10 +57,7 @@ tr th, div {
 	text-align: center;
 }
 </style>
-<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
-<script src="js/jquery.js"></script>
-<script src="//apps.bdimg.com/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-<script src="bootstrap/js/bootstrap.js"></script>
+<%@include file="../common.jsp" %>
 <script type="text/javascript">
 	$(document).ready(function() {
 		/*$("table tr:odd").css({
@@ -71,11 +68,11 @@ tr th, div {
 		})*/
 		var selectId = -1;
 		$("#showAdd").click(function() {
-			window.location.href = "dep?type=showAdd";
+			window.location.href = "showAdd.do";
 		})
 		$("#showUpdate").click(function() {
 			if (selectId > -1) {
-				location.href = "dep?type=showUpdate&id=" + selectId;
+				location.href = "showUpdate.do?id=" + selectId;
 			} else {
 				alert("请选中一条数据!");
 			}
@@ -85,7 +82,7 @@ tr th, div {
 			if (selectId > -1) {
 				if(confirm("确定删除吗")){
 					alert("删除成功"); 
-					location.href = "dep?type=delete&id=" + selectId;
+					location.href = "delete.do?id=" + selectId;
 					return true;
 				}else{
 					return false;	 
@@ -94,76 +91,6 @@ tr th, div {
 				alert("请选中一条数据!");
 			}
 		})
-		$("#showProject2Dpatment").click(function () {
-			if (selectId > -1) {
-			location.href = "d2p?id=" + selectId;
-			} else {
-				alert("请选中一条数据!");
-			}
-		})
-		$("#showProject2Dpatment2").click(function () {
-			if (selectId > -1) {
-			location.href = "d2p?type=m2&id=" + selectId;
-			} else {
-				alert("请选中一条数据!");
-			}
-		})
-		$("#showProject2Dpatment3").click(function () {
-			if (selectId > -1) {
-			location.href = "d2p?type=m3&id=" + selectId;
-			} else {
-				alert("请选中一条数据!");
-			}
-		})
-		$("#showProject2Dpatment4").click(function () {
-			if (selectId > -1) {
-			location.href = "d2p?type=m4&id=" + selectId;
-			} else {
-				alert("请选中一条数据!");
-			}
-		})
-	   $("#showProject2Dpatment5").click(function() {
-		   if (selectId > -1) {
-			   $("#mBody").html("");
-			   var html="d2p?type=m5&id=" + selectId;
-			   $("#mBody").load(html);
-			    $('#myModal').modal('show');
-			    
-				} else {
-					alert("请选中一条数据!");
-				}
-	  })
-		function doBatch(type) {
-			var length = $("#dep .select").length;
-			//var ids = "";
-			var ids = new Array();
-			if (length > 0) {
-				$("#dep .select").each(function(index, element) {
-					//ids += $(this).data("id") + ",";
-					ids.push($(this).data("id"));
-				})
-				//ids = ids.substring(0, ids.length - 1);
-				//alert(ids);				
-				location.href = "dep?type=" + type + "&ids=" + ids;
-			} else { 
-				alert("请选中数据!");
-			}
-		}
-		$("#deleteBatch").click(function() {
-			var length = $("#dep .select").length;
-			if (length > 0) {
-			   if(confirm("确定删除吗")){
-				   alert("删除成功"); 
-			       doBatch("deleteBatch");
-			       return true;
-			   }else{
-			      return false;	
-			  }
-			}else { 
-				alert("请选中数据!");
-			}
-			
-		})	
 		$("tr").click(function() {
 			$(this).toggleClass("select");
 			//selectId=$(this).children().eq(0).text();
@@ -174,13 +101,13 @@ tr th, div {
 			} else{
 				selectId = -1;
 			}
-		})
-		
-		if(${p.ye}<=1){
+		})	
+		if(${p.ye} <= 1){
 			$("#pre").addClass("disabled");
 		    $("#pre").find("a").attr("onclick","return false");
 		}
-		if(${p.ye}>=${p.maxYe}){ 
+		
+		if(${p.ye} >= ${p.maxYe}){  
 			$("#next").addClass("disabled");
 		    $("#next").find("a").attr("onclick","return false");
 		}
@@ -193,7 +120,7 @@ tr th, div {
 		<div>
 			<h1>部门管理</h1>
 		</div>
-		<form action="dep" method="post" class="form-horizontal" role="form">
+		<form action="search.do" method="post" class="form-horizontal" role="form">
 			<!--<input type="hidden" name="type" value="search" />-->
 			<div class="form-group" id="searchDiv">
 				<div class="col-sm-3">
@@ -221,66 +148,32 @@ tr th, div {
 				<c:forEach items="${list}" var="dep">
 					<tr data-id="${dep.id}">
 						<td>${dep.name}</td>
-						<td><a href="emp?d_id=${dep.id}">${dep.empCount}</a></td>
+						<td><a href="../emp/search.do?dep.id=${dep.id}">${dep.empCount}</a></td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>
 		<div id="fy">
 			<ul class="pagination">
+				<li><a
+					href="search.do?ye=1&name=${c.name}">&laquo;首页</a></li>
 				<li id="pre"><a
-					href="dep?ye=${p.ye-1}&name=${c.name}&empCount=${c.empCount!=-1?c.empCount:''}">&laquo;上一页</a></li>
+					href="search.do?ye=${p.ye-1}&name=${c.name}">&laquo;上一页</a></li>
 				<c:forEach begin="${p.beginYe}" end="${p.endYe}" varStatus="status">
 					<li <c:if test="${p.ye==status.index}">class="active"</c:if>><a
-						href="dep?ye=${status.index}&name=${c.name}&empCount=${c.empCount!=-1?c.empCount:''}">${status.index}</a></li>
+						href="search.do?ye=${status.index}&name=${c.name}">${status.index}</a></li>
 				</c:forEach>
 				<li id="next"><a
-					href="dep?ye=${p.ye+1}&name=${c.name}&empCount=${c.empCount!=-1?c.empCount:''}">下一页&raquo;</a></li>
+					href="search.do?ye=${p.ye+1}&name=${c.name}">下一页&raquo;</a></li>
+				<li><a
+					href="search.do?ye=${p.maxYe}&name=${c.name}">末页&raquo;</a></li>
 			</ul>
-		</div>
+		</div> 
 		<div>
 			<button type="button" class="btn btn-primary" id="showAdd">增加</button>
 			<button type="button" class="btn btn-primary" id="showUpdate">修改</button>
 			<button type="button" class="btn btn-primary" id="delete">删除</button>
-			<button type="button" class="btn btn-primary" id="deleteBatch">批量删除</button>
-			<button type="button" class="btn btn-primary"
-				id="showProject2Dpatment">管理项目</button>
-			<button type="button" class="btn btn-primary"
-				id="showProject2Dpatment2">管理项目2</button>
-			<button type="button" class="btn btn-primary"
-				id="showProject2Dpatment3">管理项目3</button>
-			<button type="button" class="btn btn-primary"
-				id="showProject2Dpatment4">管理项目4</button>
-			<button type="button" class="btn btn-primary"
-				id="showProject2Dpatment5" >管理项目5</button>
 		</div>
 	</div>
-	<!--<input type="button" value="增加" id="addBtn" type="name">  -->
-	<!-- 模态框（Modal） -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal"
-						aria-hidden="true">×</button>
-					<h4 class="modal-title" id="myModalLabel">模态框（Modal）标题</h4>
-				</div>
-				<div class="modal-body" id="mBody">
-				<p></p>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">
-						关闭</button>
-				</div>
-			</div>
-			<!-- /.modal-content -->
-		</div>
-		<!-- /.modal-dialog -->
-	</div>
-	<!-- /.modal -->
-	<script>
-
-</script>
 </body>
 </html>

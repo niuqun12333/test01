@@ -12,12 +12,11 @@
 	margin: 20px auto;
 }
 </style>
-<link href="bootstrap/css/bootstrap.css" rel="stylesheet" />
+<%@include file="../common.jsp" %>
 </head>
 <body>
 	<div id="main">
-		<form action="dep" method="post" class="form-horizontal" role="form">
-			<input type="hidden" name="type" value="update" />
+		<form action="update.do" method="post" class="form-horizontal" role="form">
 			<input type="hidden" name="id" value="${dep.id}" />
 			<div class="form-group">
 				<label for="name" class="col-sm-2 control-label">部门</label>

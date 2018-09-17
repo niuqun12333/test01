@@ -9,32 +9,33 @@ public class Pagination {
 
 	// numInPage 一页表格显示多少条记录 numOfPage 一页中显示多少页码
 	public Pagination(int ye, int count, int numInPage, int numOfPage) {
-		this.ye = ye;
-		
-		if (this.ye <= 1) {
-			this.ye = 1;
+		if (count != 0) {
+			this.ye = ye;
+
+			if (this.ye <= 1) {
+				this.ye = 1;
+			}
+			maxYe = count % numInPage == 0 ? count / numInPage : count / numInPage + 1;
+			if (this.ye > maxYe) {
+				this.ye = maxYe;
+			}
+			beginYe = this.ye - numOfPage / 2;
+			if (beginYe <= 1) {
+				beginYe = 1;
+			}
+			endYe = beginYe + numOfPage - 1;
+			if (endYe >= maxYe) {
+				endYe = maxYe;
+				beginYe = endYe - numOfPage + 1;
+			}
+			if (beginYe <= 1) {
+				beginYe = 1;
+			}
+			if (this.ye <= 1) {
+				this.ye = 1;
+			}
+			begin = (this.ye - 1) * numInPage;
 		}
-		maxYe = count % numInPage == 0 ? count / numInPage : count / numInPage + 1;
-		if (this.ye > maxYe) {
-			this.ye = maxYe;
-		}
-		beginYe = this.ye - numOfPage / 2;
-		if (beginYe <= 1) {
-			beginYe = 1;
-		}
-		endYe = beginYe + numOfPage - 1;
-		if (endYe >= maxYe) {
-			endYe = maxYe;
-			beginYe = endYe - numOfPage + 1;
-		}
-		if (beginYe <= 1) {
-			beginYe = 1;
-		}
-		if (this.ye <= 1) {
-			this.ye = 1;
-		}
-		begin = (this.ye - 1) * numInPage;
-		
 	}
 
 	public int getYe() {
