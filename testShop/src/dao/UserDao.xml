@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.UserDao">
+	<select id="search" resultType="entity.User">
+		select * from user where
+		user=#{user.user} and
+		password=#{user.password}
+	</select>
+	<insert id="add" useGeneratedKeys="true" keyProperty="id">
+		insert into user(user,password,name,phone)
+		values(#{user},#{password},#{name},#{phone})
+	</insert>
+	<insert id="addCar">
+		insert into car(u_id)
+		values(#{id})
+	</insert>
+</mapper> 
+    

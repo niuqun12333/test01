@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.IndexDao">
+	<select id="searchCarId" resultType="int">
+		select id from car where
+		u_id=#{u_id}
+	</select>
+	<select id="searchCarDetail" resultType="int">
+		select count(*) from
+		cardetail
+		where
+		p_id=#{pro.id} and c_id=#{c_id}
+	</select>
+	<insert id="addCar">
+		insert into cardetail(number,p_id,c_id)
+		values(#{number},#{pro.id},#{c_id})
+	</insert>
+	<update id="updateCar">
+		update cardetail set number=number+#{number} where
+		p_id=#{pro.id} and c_id=#{c_id}
+	</update>
+	<update id="updateCarDetail">
+		update cardetail set number=#{number} where
+		id=#{cd.id}
+	</update>
+	<update id="updateCarAll">
+		update car set total=#{car.total},allNum=#{car.allNum} where
+		id=#{car.id}
+	</update>
+	<delete id="deleteCar">
+		delete from cardetail where id=#{cd.id}
+	</delete>
+	<delete id="deleteCarDetails">
+		delete from cardetail where id in(${ids})
+	</delete>
+	<select id="searchCar" resultMap="CarAndUserAndCdAndProAndPic">
+		select u.*,c.id as
+		carId,c.total,c.allNum,cd.id as cdId,cd.number,cd.subtotal,pr.id as
+		prId,pr.name as prName,pr.price,pr.introduce,pr.store,pr.sellNum,pi.id
+		as piId,pi.rank,pi.path
+		from user as u
+		left join car as c on c.u_id=u.id
+		left join cardetail as cd on cd.c_id=c.id
+		left join product as pr on cd.p_id=pr.id
+		left join picture as pi on pr.id=pi.p_id
+		where rank=1 and u.id=#{user.id}
+	</select>
+	<resultMap type="entity.CarDetail" id="cardetail">
+		<id property="id" column="id" />
+		<result property="number" column="number" />
+		<result property="subtotal" column="subtotal" />
+		<result property="p_id" column="p_id" />
+		<result property="c_id" column="c_id" />
+	</resultMap>
+	<resultMap type="entity.User" id="CarAndUserAndCdAndProAndPic">
+		<id property="id" column="id" />
+		<result property="user" column="user" />
+		<result property="password" column="password" />
+		<result property="name" column="name" />
+		<result property="phone" column="phone"/>
+		<association property="car" javaType="entity.Car">
+			<id property="id" column="carId" />
+			<result property="total" column="total" />
+			<result property="allNum" column="allNum" />
+			<collection property="cds" ofType="entity.CarDetail">
+				<id property="id" column="cdId" />
+				<result property="number" column="number" />
+				<result property="subtotal" column="subtotal" />
+				<association property="product" javaType="entity.Product">
+					<id property="id" column="prId" />
+					<result property="name" column="prName" />
+					<result property="price" column="price" />
+					<result property="introduce" column="introduce" />
+					<result property="store" column="store" />
+					<result property="sellNum" column="sellNum" />
+					<collection property="pictures" ofType="entity.Picture">
+						<id property="id" column="piId" />
+						<result property="rank" column="rank" />
+						<result property="path" column="path" />
+					</collection>
+				</association>
+			</collection>
+		</association>
+	</resultMap>
+</mapper> 
+    

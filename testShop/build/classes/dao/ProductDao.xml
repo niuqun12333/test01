@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.ProductDao">
+	<select id="searchCount" resultType="int">
+		select count(*) from product as pr left join picture as pi on
+		pr.id=pi.p_id
+		where 1=1 and rank=1
+		<if test="pro.name!=null and pro.name!=''">
+			and name like '%${pro.name}%'
+		</if>
+		<if test="fprice!=null">
+			and price&gt;=#{fprice}
+		</if>
+		<if test="sprice!=null">
+			and price&lt;=#{sprice}
+		</if>
+	</select>
+	<select id="search" resultMap="ProAndPic">
+		select * from product as pr left join picture as pi on pr.id=pi.p_id
+		where 1=1 and rank=1
+		<if test="pro.name!=null and pro.name!=''">
+			and name like '%${pro.name}%'
+		</if>
+		<if test="fprice!=null">
+			and price&gt;=#{fprice}
+		</if>
+		<if test="sprice!=null">
+			and price&lt;=#{sprice}
+		</if>
+		limit #{begin},#{size}
+	</select>
+	<select id="searchPage" resultMap="ProAndPic">
+		select pr.*,pi.id as
+		id1,pi.rank,pi.path,pi.p_id
+		from product as pr
+		left join picture as pi
+		on pr.id=pi.p_id where pr.id=#{pro.id}
+	</select>
+	
+	<resultMap type="entity.Product" id="ProAndPic">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="price" column="price" />
+		<result property="introduce" column="introduce" />
+		<result property="store" column="store" />
+		<result property="sellNum" column="sellNum" />
+		<collection property="pictures" ofType="entity.Picture">
+			<id property="id" column="id1" />
+			<result property="rank" column="rank" />
+			<result property="path" column="path" />
+			<result property="p_id" column="p_id" />
+		</collection>
+	</resultMap>
+</mapper> 
+    
