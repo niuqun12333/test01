@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.OrderDao">
+	<select id="searchOrder" resultMap="OrdAndLocAndOdAndProAndPic">
+		select ord.*,loc.id as
+		locId,loc.name as name,loc.phone as
+		phone,loc.province as
+		province,loc.city as city,loc.area as
+		area,loc.street as
+		street,loc.tag as tag,loc.zipcode as zipcode,od.id
+		as odId,od.num as
+		num,od.subtotal as subtotal,pr.id as prId,pr.name as
+		prName,pr.price
+		as price,pr.introduce as introduce,pr.store as
+		store,pr.sellNum as
+		sellNum,pi.id as piId,pi.rank as rank,pi.path as
+		path
+		from orders as
+		ord
+		left join location as loc on ord.loc_id=loc.id
+		left join
+		ordersdetail as od on ord.id=od.or_id
+		left join product as pr
+		on
+		od.pr_id=pr.id
+		left join picture as pi on pr.id=pi.p_id
+		where 1=1
+		<if test="orderNum!=null and orderNum!=''">
+			and orderNum like '${orderNum}%'
+		</if>
+		<if test="time!=null and time!=''">
+			and time like '${time}%'
+		</if>
+		<if test="id!=null and id!=''">
+			and ord.id=#{id}
+		</if>
+	</select>
+	<update id="updateCondition">
+		update orders set orCondition='已发货' where id=#{id}
+	</update>
+	<delete id="deleteOrder">
+		delete from orders where id=#{id}
+	</delete>
+	<delete id="deleteOrderDetails">
+		delete from ordersdetail where or_id=#{id}
+	</delete>
+	<resultMap type="entity.Order" id="OrdAndLocAndOdAndProAndPic">
+		<id property="id" column="id" />
+		<result property="orderNum" column="orderNum" />
+		<result property="total" column="total" />
+		<result property="allNum" column="allNum" />
+		<result property="time" column="time" />
+		<result property="orCondition" column="orCondition"/>
+		<association property="location" javaType="entity.Location">
+			<id property="id" column="locId" />
+			<result property="name" column="name" />
+			<result property="phone" column="phone" />
+			<result property="province" column="province" />
+			<result property="city" column="city" />
+			<result property="area" column="area" />
+			<result property="street" column="street" />
+			<result property="tag" column="tag" />
+			<result property="zipcode" column="zipcode" />
+		</association>
+		<collection property="details" ofType="entity.OrderDetail">
+			<id property="id" column="odId" />
+			<result property="num" column="num" />
+			<result property="subtotal" column="subtotal" />
+			<association property="product" javaType="entity.Product">
+				<id property="id" column="prId" />
+				<result property="name" column="prName" />
+				<result property="price" column="price" />
+				<result property="introduce" column="introduce" />
+				<result property="store" column="store" />
+				<result property="sellNum" column="sellNum" />
+				<collection property="pictures" ofType="entity.Picture">
+					<id property="id" column="piId" />
+					<result property="rank" column="rank" />
+					<result property="path" column="path" />
+				</collection>
+			</association>
+		</collection>
+	</resultMap>
+</mapper> 
+    
