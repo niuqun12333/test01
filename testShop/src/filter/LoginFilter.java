@@ -25,7 +25,7 @@ public class LoginFilter implements Filter {
 			throws IOException, ServletException {
 		HttpSession session = ((HttpServletRequest) request).getSession();
 		if (session.getAttribute("userShop") == null) {
-			((HttpServletResponse) response).sendRedirect("doLogin.do");
+			((HttpServletResponse) response).sendRedirect("showLogin.do");
 		} else {
 			chain.doFilter(request, response);
 		}

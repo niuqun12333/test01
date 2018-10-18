@@ -35,12 +35,14 @@ public class CarController {
 	}
 
 	@RequestMapping("addCar")
-	public String addCar(HttpSession session, Product pro, int num) {
+	@ResponseBody
+	public boolean addCar(HttpSession session, Product pro, int num) {
 		User userSession=(User) session.getAttribute("userShop");
 		int id=userSession.getId();
 		int c_id = carService.searchCarId(id);
 		boolean flag = carService.addCar(pro, id, num, c_id);
-		return "redirect:searchCar.do";
+		return flag;
+
 
 	}
 

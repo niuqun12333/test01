@@ -115,19 +115,47 @@
 
 		$(".Xcontent32").click(function() {
 			var num = $(".input").val()
-			if (num > 0) {
+			if (num > 1) {
 				$(".input").val(num - 1);
 			}
 
 		})
 		$(".Xcontent34").click(function() {
 			var num = $(".input").val();
-
+			if (num > 0) {
+				$.ajax({
+					url:"addCar.do",
+					type:"post",
+					data:{id:${pro.id},num:num},
+					dataType:"text",
+					success:function(data){
+						if(data=="true"){
+							location.href="searchCar.do";
+						}else{
+							alert("未登录!");
+							location.href="searchCar.do";
+						}
+					}
+				})
+			}
 		})
 		$(".Xcontent35").click(function() {
 			var num = $(".input").val();
 			if (num > 0) {
-				location.href = "addCar.do?id=${pro.id}&num=" + num;
+				$.ajax({
+					url:"addCar.do",
+					type:"post",
+					data:{id:${pro.id},num:num},
+					dataType:"text",
+					success:function(data){
+						if(data=="true"){
+							alert("加入购物车成功");
+						}else{
+							alert("未登录!");
+							location.href="searchCar.do";
+						}
+					}
+				})
 			}
 		})
 
