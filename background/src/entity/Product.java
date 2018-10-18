@@ -9,7 +9,7 @@ public class Product {
 	private String introduce;
 	private Integer store;
 	private Integer sellNum;
-	private int c_id;
+	private int m_id;
 	private String pictureIds;
 	private List<Picture> pictures;
 
@@ -77,13 +77,15 @@ public class Product {
 		this.pictureIds = pictureIds;
 	}
 
-	public int getC_id() {
-		return c_id;
+	public int getM_id() {
+		return m_id;
 	}
 
-	public void setC_id(int c_id) {
-		this.c_id = c_id;
+	public void setM_id(int m_id) {
+		this.m_id = m_id;
 	}
+
+	
 	
 
 }

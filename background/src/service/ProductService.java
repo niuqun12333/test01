@@ -3,6 +3,7 @@ package service;
 import java.util.List;
 
 import entity.Classes;
+import entity.MClass;
 import entity.Picture;
 import entity.Product;
 
@@ -32,8 +33,16 @@ public interface ProductService {
 
 	boolean updateClasses(Classes cla);
 
-	boolean addClasses(Classes cla);
+	int addClasses(Classes cla);
 
 	boolean deleteClasses(Classes cla);
+
+	List<MClass> searchMClass(MClass mc);
+
+	boolean addMClass(MClass mclass);
+
+	boolean deleteMClass(MClass mc);
+
+	boolean updateMClass(MClass mc);
 
 }

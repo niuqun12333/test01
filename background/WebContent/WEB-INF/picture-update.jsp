@@ -87,12 +87,24 @@
 							</div>
 						</div>
 						<div class="Add_p_s">
-							<label class="form-label col-2">单位：</label>
+							<label class="form-label col-2">分类：</label>
 							<div class="formControls col-2">
-								<span class="select-box"> <select class="select">
-							<c:forEach items="${classList}" var="classes">
-									<option value="${classes.id}" <c:if test="${pro.id==classes.id}">selected</c:if> >${classes.name}</option>
-							</c:forEach>
+								<span class="select-box"> <select class="select classes">
+										<c:forEach items="${classList}" var="classes">
+											<option value="${classes.id}">${classes.name}</option>
+										</c:forEach>
+								</select>
+								</span>
+							</div>
+						</div>
+						<div class="Add_p_s">
+							<label class="form-label col-2">品牌：</label>
+							<div class="formControls col-2">
+								<span class="select-box"> <select class="select pinpai">
+								        <c:forEach items="${mcList}" var="mc">
+											<option value="${mc.id}"
+												<c:if test="${pro.m_id==mc.id}">selected</c:if>>${mc.name}</option>
+										</c:forEach>
 								</select>
 								</span>
 							</div>
@@ -111,11 +123,11 @@
 									placeholder="" id="store" name="store">个
 							</div>
 						</div>
-					</div>						
+					</div>
 					<div class="clearfix cl">
 						<label for="picture" class="form-label col-1">图片</label>
-						<div class="form-label col-10" style="width:200px;">
-							<input type="file" value="选择图片" name="files" class="form-control"/>
+						<div class="form-label col-10" style="width: 200px;">
+							<input type="file" value="选择图片" name="files" class="form-control" />
 						</div>
 						<div class="form-label col-1">
 							<input type="button" value="上传" id="upload"
@@ -982,7 +994,7 @@ $(function(){
 		var price=$("#price").val();
 		var introduce=$("#introduce").val();
 		var store=$("#store").val();
-		var c_id = $(".select").val();
+		var m_id = $(".pinpai").val();
 		var oldPicNames="";
 		$(".oldPicture").each(function(index, element) {
 			oldPicNames+=$(this).data("path");
@@ -999,7 +1011,7 @@ $(function(){
 				introduce:introduce,
 				store:store,
 				picNames:picNames,
-				c_id:c_id},
+				m_id:m_id},
 			dataType : "text",
 			success : function(data) {
 				if(data="true"){
@@ -1048,6 +1060,27 @@ $(function(){
 		}
 			
 		})
+$(".classes").change(function() {
+	var c_id=$(this).val();
+	$.ajax({
+		url:"searchMClass.do",
+		type:"post",
+		data:{c_id:c_id},
+		dataType:"json",
+		success:function(data){
+			$(".pinpai").html("");
+			if(data.length!=0){
+			$.each(data,function(i,result){
+	    		var str="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+	    		$(".pinpai").append(str);
+	        }) 
+			}else{
+				var str="<option value=''>请添加品牌</option>";
+				$(".pinpai").append(str); 
+			}
+		}
+	})
+})	
 })( jQuery );
 </script>
 </body>

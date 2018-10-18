@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import entity.Classes;
+import entity.MClass;
 import entity.Picture;
 import entity.Product;
 
@@ -41,5 +42,15 @@ public interface ProductDao {
 	int addClasses(Classes cla);
 
 	int deleteClasses(Classes cla);
+
+	List<MClass> searchMClass(MClass mc);
+
+	int addMClass(MClass mclass);
+
+	int deleteMClassByClass(Classes cla);
+
+	int deleteMClass(MClass mc);
+
+	int updateMClass(MClass mc);
 
 }

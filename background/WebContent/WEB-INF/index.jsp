@@ -87,7 +87,11 @@
 				$("#parentIframe").html('<span class="parentIframe iframeurl"> </span>').css("display","none").ready();	
 				$("#parentIfour").html(''). css("display","none").ready();		
       });
-    
+    if(self!=top){  
+        //不是顶层页面  
+          alert("您的登陆已超时，请重新登陆！");  
+          top.location.href="showLogin.do";  
+    }
 		
 });
  
@@ -321,7 +325,6 @@ $('.change_Password').on('click', function(){
                      <li><a href="#" class="dropdown-toggle"><i class="icon-desktop"></i><span class="menu-text"> 产品管理 </span><b class="arrow icon-angle-down"></b></a>
 					   <ul class="submenu">
                          <li class="home"><a  href="javascript:void(0)" name="showProduct.do"  title="产品类表" class="iframeurl"><i class="icon-double-angle-right"></i>产品类表</a></li>
-						 <li class="home"><a  href="javascript:void(0)" name="Brand_Manage.html" title="品牌管理"  class="iframeurl"><i class="icon-double-angle-right"></i>品牌管理</a></li>
 						 <li class="home"><a href="javascript:void(0)" name="showClasses.do" title="分类管理"  class="iframeurl"><i class="icon-double-angle-right"></i>分类管理</a></li>
 						</ul>
 					</li>

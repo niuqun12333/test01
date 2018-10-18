@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import dao.ProductDao;
 import entity.Classes;
+import entity.MClass;
 import entity.Picture;
 import entity.Product;
 import service.ProductService;
@@ -93,14 +94,40 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	@Override
-	public boolean addClasses(Classes cla) {
+	public int addClasses(Classes cla) {
 		int rs = proDao.addClasses(cla);
-		return rs>0;
+		int c_id = cla.getId();
+		return c_id;
 	}
 
 	@Override
 	public boolean deleteClasses(Classes cla) {
-		int rs = proDao.deleteClasses(cla);
+		int rs = proDao.deleteMClassByClass(cla);
+		rs = proDao.deleteClasses(cla);
+		return rs>0;
+	}
+
+	@Override
+	public List<MClass> searchMClass(MClass mc) {
+		List<MClass> list = proDao.searchMClass(mc);
+		return list;
+	}
+
+	@Override
+	public boolean addMClass(MClass mclass) {
+		int rs = proDao.addMClass(mclass);
+		return rs>0;
+	}
+
+	@Override
+	public boolean deleteMClass(MClass mc) {
+		int rs = proDao.deleteMClass(mc);
+		return rs>0;
+	}
+
+	@Override
+	public boolean updateMClass(MClass mc) {
+		int rs = proDao.updateMClass(mc);
 		return rs>0;
 	}
 

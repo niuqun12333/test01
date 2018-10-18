@@ -117,8 +117,11 @@ var setting = {
 
 var zNodes =[
 	{ id:1, pId:0, name:"商城分类列表", open:true},
-	<c:forEach items="${classList}" var="cla">
-	{ id:11, pId:1, name:"${cla.name}",file:"showClassProUpdate.do?id=${cla.id}"},
+	<c:forEach items="${classList}" var="cla" varStatus="vs">
+	{ id:1${vs.index}, pId:1, name:"${cla.name}",file:"showClassProUpdate.do?id=${cla.id}",open:true},
+	<c:forEach items="${cla.mcList}" var="mc" varStatus="mcvs">
+	{ id:1${vs.index}${mcvs.index}, pId:1${vs.index}, name:"${mc.name}",file:"showClassProUpdate.do?id=${cla.id}"}, 
+	</c:forEach>
 	</c:forEach>
 	
 ];

@@ -80,10 +80,18 @@
 					<div class="Add_p_s">
 						<label class="form-label col-2">类别：</label>
 						<div class="formControls col-2">
-							<span class="select-box"> <select class="select">
-							<c:forEach items="${classList}" var="classes">
-									<option value="${classes.id}">${classes.name}</option>
-							</c:forEach>
+							<span class="select-box"> <select class="select classes">
+									<c:forEach items="${classList}" var="classes">
+										<option value="${classes.id}">${classes.name}</option>
+									</c:forEach>
+							</select>
+							</span>
+						</div>
+					</div>
+					<div class="Add_p_s">
+						<label class="form-label col-2">品牌：</label>
+						<div class="formControls col-2">
+							<span class="select-box"> <select class="select pinpai">
 							</select>
 							</span>
 						</div>
@@ -107,7 +115,7 @@
 				</div>
 				<div class="clearfix cl">
 					<label for="picture" class="form-label col-2">图片</label>
-					<div class="form-label col-7 " style="width:200px;">
+					<div class="form-label col-7 " style="width: 200px;">
 						<input type="file" value="选择图片" name="files" class="form-control" />
 					</div>
 					<div class="form-label col-3">
@@ -968,7 +976,7 @@ $(function(){
 		var price=$("#price").val();
 		var introduce=$("#introduce").val();
 		var store=$("#store").val();
-		var c_id = $(".select").val();
+		var m_id = $(".pinpai").val();
 		picNames=picNames.substring(0,picNames.length-1);
 		$.ajax({
 			url : "addPicPro.do",
@@ -979,7 +987,7 @@ $(function(){
 				introduce:introduce,
 				store:store,
 				picNames:picNames,
-				c_id:c_id},
+				m_id:m_id},
 			dataType : "text",
 			success : function(data) {
 				if(data="true"){
@@ -1007,6 +1015,50 @@ $(function(){
                 }
             })
 		})
+		showPinpai();
+	function showPinpai(){
+	var c_id=$(".classes").val();
+	$.ajax({
+		url:"searchMClass.do",
+		type:"post",
+		data:{c_id:c_id},
+		dataType:"json",
+		success:function(data){
+			$(".pinpai").html("");
+			if(data.length!=0){
+			$.each(data,function(i,result){
+	    		var str="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+	    		$(".pinpai").append(str);
+	        }) 
+			}else{
+				var str="<option value=''>请添加品牌</option>";
+				$(".pinpai").append(str);
+			}
+		}
+	})
+}
+$(".classes").change(function() {
+	var c_id=$(this).val();
+	$.ajax({
+		url:"searchMClass.do",
+		type:"post",
+		data:{c_id:c_id},
+		dataType:"json",
+		success:function(data){
+			$(".pinpai").html("");
+			if(data.length!=0){
+			$.each(data,function(i,result){
+	    		var str="<option value='"+data[i].id+"'>"+data[i].name+"</option>";
+	    		$(".pinpai").append(str);
+	        }) 
+			}else{
+				var str="<option value=''>请添加品牌</option>";
+				$(".pinpai").append(str); 
+			}
+		}
+	})
+})	
+	
 })( jQuery );
 </script>
 </body>

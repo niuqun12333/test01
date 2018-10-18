@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
 	pageEncoding="utf-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -26,36 +26,47 @@
 <title>添加产品分类</title>
 </head>
 <body>
-<c:forEach items="${classList}" var="cla">
-	<div class="type_style">
-		<div class="type_title">产品类型信息</div>
-		<div class="type_content">
-			<div class="Operate_btn">
-				<a href="showClassPro.do" class="btn  btn-warning"><i
-					class="icon-edit align-top bigger-125"></i>新增子类型</a> <a
-					href="javascript:ovid()" class="btn  btn-success"><i
-					class="icon-ok align-top bigger-125"></i>禁用该类型</a> <a
-					href="deleteClasses.do?id=${cla.id}" class="btn  btn-danger"><i
-					class="icon-trash   align-top bigger-125"></i>删除该类型</a>
+	<c:forEach items="${classList}" var="cla">
+		<div class="type_style">
+			<div class="type_title">产品类型信息</div>
+			<div class="type_content">
+				<div class="Operate_btn">
+					<a class="btn  btn-warning addBtn"><i
+						class="icon-edit align-top bigger-125"></i>新增子类型</a> <a
+						href="javascript:ovid()" class="btn  btn-success"><i
+						class="icon-ok align-top bigger-125"></i>禁用该类型</a> <a
+						data-id="${cla.id}" class="btn  btn-danger" id="deleteBtn"><i
+						class="icon-trash   align-top bigger-125"></i>删除该类型</a>
+				</div>
+				<div class="form form-horizontal" id="form-user-add">
+					<div id="xinzeng">
+						<div class="Operate_cont clearfix">
+							<label class="form-label"><span class="c-red">*</span>分类名称：</label>
+							<div class="formControls ">
+								<input type="text" class="input-text className" value="${cla.name}"
+									placeholder="" data-id="${cla.id}" name="name">
+							</div>
+						</div>
+						<c:forEach items="${cla.mcList}" var="mclass">
+						<div class="Operate_cont clearfix mclass">
+							<label class="form-label"><span class="c-red">*</span>品牌：</label>
+							<div class="formControls ">
+								<input type="text" class="input-text oldMClass" value="${mclass.name}"
+									placeholder="" data-id="${mclass.id}" name="product-category-name">
+							</div>
+							<input type="button" value="删除" class="oldDelete" data-id="${mclass.id}">
+						</div>
+						</c:forEach>
+					</div>
+					<div class="">
+						<div class="" style="text-align: center">
+							<input class="btn btn-primary radius submitBtn" type="button" value="提交">
+						</div>
+					</div>
+				</div>
 			</div>
-			<form action="updateClasses.do?id=${cla.id}" method="post" class="form form-horizontal"
-				id="form-user-add">
-				<div class="Operate_cont clearfix">
-					<label class="form-label"><span class="c-red">*</span>分类名称：</label>
-					<div class="formControls ">
-						<input type="text" class="input-text" value="${cla.name}" placeholder=""
-							id="user-name" name="name">
-					</div>
-				</div>
-				<div class="">
-					<div class="" style="text-align: center">
-						<input class="btn btn-primary radius" type="submit" value="提交">
-					</div>
-				</div>
-			</form>
 		</div>
-	</div>
-	</div>
+		</div>
 	</c:forEach>
 	<script type="text/javascript" src="Widget/icheck/jquery.icheck.min.js"></script>
 	<script type="text/javascript"
@@ -80,6 +91,97 @@
 					parent.layer.close(index);
 				}
 			});
+			$(".addBtn").click(function() {
+								var str = "<div class='Operate_cont clearfix mclass'><label class='form-label'><span class='c-red'>*</span>品牌：</label><div class='formControls '><input type='text' class='input-text newMClass' value='' placeholder=''id='' name=''></div><input type='button' value='删除' class='newDelete'></div>";
+								$("#xinzeng").append(str);
+							})
+			$(document).on("click", ".newDelete", function() {
+				var parent = $(this).parent();
+				parent.remove();
+			})
+			var mclassNames = "";
+			function updateMClass(mclassId,mclassName){
+				$.ajax({
+					url:"updateMClass.do",
+					type:"post",
+					data:{
+					id:mclassId,
+					name:mclassName},
+					dataType:"text",
+					success:function(data){
+// 						if(data=="true"){
+// 							location.href="showClassPro.do";
+// 						}else{
+// 							location.href="showClassProUpdate.do?id="+id;
+// 						}
+					}					
+				})
+			}
+			$(document).on("click",".submitBtn",function() {
+						$(".newMClass").each(function(index, element) {
+							mclassNames += $(this).val() + ",";
+						})
+						mclassNames = mclassNames.substring(0,mclassNames.length - 1);
+						var className = $(".className").val();
+						var id=$(".className").data("id");
+						$(".oldMClass").each(function(index,element) {
+							var mclassName=$(this).val();
+							var mclassId=$(this).data("id");
+							updateMClass(mclassId,mclassName);
+						})
+						$.ajax({
+							url:"updateClasses.do",
+							type:"post",
+							data:{
+							id:id,
+							name:className,
+							mclassNames:mclassNames},
+							dataType:"text",
+							success:function(data){
+								if(data=="true"){
+									location.href="showClassPro.do";
+									window.parent.location.reload();
+								}else{
+									location.href="showClassProUpdate.do?id="+id;
+									window.parent.location.reload();
+								}
+							}					
+						})
+
+					})
+			$(".oldDelete").click(function() {
+				var parent = $(this).parent();
+				//alert(parent.html());
+				var id=$(this).data("id");
+				$.ajax({
+					url:"deleteMClass.do",
+					type:"post",
+					data:{id:id},
+					dataType:"text",
+					success:function(data){
+						if(data=="true"){
+							parent.remove();
+// 							window.parent.location.reload();
+						}
+					}					
+				})
+			})
+			$("#deleteBtn").click(function() {
+				var id=$(this).data("id");
+				$.ajax({
+					url:"deleteClasses.do",
+					type:"post",
+					data:{id:id},
+					dataType:"text",
+					success:function(data){
+						if(data=="true"){
+							location.href="showClassPro.do";
+							window.parent.location.reload();
+						}
+					}					
+				})
+			})
+
 		});
 	</script>
 </body>

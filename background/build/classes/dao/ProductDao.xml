@@ -15,8 +15,8 @@
 		<if test="pro.id!=null and pro.id!=''">
 			and pr.id=#{pro.id}
 		</if>
-		<if test="pro.c_id!=null and pro.c_id!=''">
-			and pr.c_id=#{pro.c_id}
+		<if test="pro.m_id!=null and pro.m_id!=''">
+			and pr.m_id=#{pro.m_id}
 		</if>
 	</select>
 	<select id="searchPage" resultMap="ProAndPic">
@@ -34,22 +34,37 @@
 		select * from
 		picture where p_id in(${ids})
 	</select>
-	<select id="searchClass" resultType="entity.Classes">
-		select * from classes
+	<select id="searchClass" resultMap="ClassAndMClass">
+		select cla.*,mc.id as
+		mcId,mc.name as mcName,mc.c_id from classes as cla
+		left join mclass as
+		mc on cla.id=mc.c_id
 	</select>
-	<select id="searchAClass" resultType="entity.Classes">
-		select * from classes where
-		id=#{id}
+	<select id="searchAClass" resultMap="ClassAndMClass">
+		select cla.*,mc.id as
+		mcId,mc.name as mcName,mc.c_id from classes as cla
+		left join mclass as
+		mc on cla.id=mc.c_id where
+		cla.id=#{id}
+	</select>
+	<select id="searchMClass" resultType="entity.MClass">
+		select * from mclass where 1=1
+		<if test="c_id!=null and c_id!=''">
+			and c_id=#{c_id}
+		</if>
 	</select>
 	<insert id="addPicture" useGeneratedKeys="true" keyProperty="id">
 		insert into picture(rank,path,p_id) values(#{rank},#{path},#{p_id})
 	</insert>
 	<insert id="addProduct" useGeneratedKeys="true" keyProperty="id">
-		insert into product(name,price,introduce,store,c_id)
-		values(#{name},#{price},#{introduce},#{store},#{c_id})
+		insert into product(name,price,introduce,store,m_id)
+		values(#{name},#{price},#{introduce},#{store},#{m_id})
 	</insert>
-	<insert id="addClasses">
+	<insert id="addClasses" useGeneratedKeys="true" keyProperty="id">
 		insert into classes(name) values(#{name})
+	</insert>
+	<insert id="addMClass">
+		insert into mclass(name,c_id) values(#{name},#{c_id})
 	</insert>
 	<update id="addPicProId">
 		update picture set p_id=#{id} where id
@@ -57,7 +72,7 @@
 	</update>
 	<update id="updatePicPro">
 		update product set
-		name=#{name},price=#{price},introduce=#{introduce},store=#{store},c_id=#{c_id}
+		name=#{name},price=#{price},introduce=#{introduce},store=#{store},m_id=#{m_id}
 		where id=#{id}
 	</update>
 	<update id="updatePicture">
@@ -65,6 +80,9 @@
 	</update>
 	<update id="updateClasses">
 		update classes set name=#{name} where id=#{id}
+	</update>
+	<update id="updateMClass">
+		update mclass set name=#{name} where id=#{id}
 	</update>
 	<delete id="deleteProduct">
 		delete from product where id in(${ids})
@@ -78,6 +96,12 @@
 	<delete id="deleteClasses">
 		delete from classes where id=#{id}
 	</delete>
+	<delete id="deleteMClassByClass">
+		delete from mclass where c_id=#{id}
+	</delete>
+	<delete id="deleteMClass">
+		delete from mclass where id=#{id}
+	</delete>
 	<resultMap type="entity.Product" id="ProAndPic">
 		<id property="id" column="id" />
 		<result property="name" column="name" />
@@ -85,12 +109,21 @@
 		<result property="introduce" column="introduce" />
 		<result property="store" column="store" />
 		<result property="sellNum" column="sellNum" />
-		<result property="c_id" column="c_id" />
+		<result property="m_id" column="m_id" />
 		<collection property="pictures" ofType="entity.Picture">
 			<id property="id" column="picId" />
 			<result property="rank" column="rank" />
 			<result property="path" column="path" />
 			<result property="p_id" column="p_id" />
+		</collection>
+	</resultMap>
+	<resultMap type="entity.Classes" id="ClassAndMClass">
+		<id property="id" column="id" />
+		<result property="name" column="name" />
+		<collection property="mcList" ofType="entity.MClass">
+			<id property="id" column="mcId" />
+			<result property="name" column="mcName" />
+			<result property="c_id" column="c_id" />
 		</collection>
 	</resultMap>
 </mapper> 

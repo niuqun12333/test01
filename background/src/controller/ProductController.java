@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import entity.Classes;
+import entity.MClass;
 import entity.Picture;
 import entity.Product;
 import service.ProductService;
@@ -147,12 +148,14 @@ public class ProductController {
 	}
 
 	@RequestMapping("showProductUpdate")
-	public ModelAndView showProductUpdate(Product product) {
+	public ModelAndView showProductUpdate(Product product,MClass mc) {
 		ModelAndView mv = new ModelAndView("picture-update");
 		List<Product> list = proService.search(product);
 		List<Classes> classList = proService.searchClass();
+		List<MClass> mcList = proService.searchMClass(mc);
 		mv.addObject("classList", classList);
 		mv.addObject("proList", list);
+		mv.addObject("mcList", mcList);
 		return mv;
 	}
 
@@ -219,31 +222,69 @@ public class ProductController {
 		return mv;
 	}
 	@RequestMapping("addClasses")
-	public String addClasses(Classes cla) {
-		boolean flag = proService.addClasses(cla);
-		if(flag) {
-			return "redirect:showClassPro.do";
+	@ResponseBody
+	public boolean addClasses(Classes cla,String mclassNames) {
+		boolean flag=false;
+		int c_id = proService.addClasses(cla);
+		
+			String[] mclassName = mclassNames.split(",");
+			if(mclassName.length!=0) {
+			for(int i=0;i<mclassName.length;i++) {
+				String name = mclassName[i];
+				MClass mclass=new MClass();
+				mclass.setName(name);
+				mclass.setC_id(c_id);
+				flag = proService.addMClass(mclass); 
+			}
 		}else {
-			return "redirect:showClassProUpdate.do?id="+cla.getId();
+			flag=true;
 		}
+		return flag;
 	}
 	@RequestMapping("updateClasses")
-	public String updateClasses(Classes cla) {
+	@ResponseBody
+	public boolean updateClasses(Classes cla,String mclassNames) {
 		boolean flag = proService.updateClasses(cla);
-		if(flag) {
-			return "redirect:showClassPro.do";
-		}else {
-			return "redirect:showClassProUpdate.do?id="+cla.getId();
+		int c_id = cla.getId();
+		if(mclassNames!="") {
+			String[] mclassName = mclassNames.split(",");
+			for(int i=0;i<mclassName.length;i++) {
+				String name = mclassName[i];
+				MClass mclass=new MClass();
+				mclass.setName(name);
+				mclass.setC_id(c_id);
+				flag = proService.addMClass(mclass); 
+			}
 		}
-		
+		return flag;
 	}
 	@RequestMapping("deleteClasses")
-	public String deleteClasses(Classes cla) {
+	@ResponseBody
+	public boolean deleteClasses(Classes cla) {
 		boolean flag = proService.deleteClasses(cla);
-		if(flag) {
-			return "redirect:showClassPro.do";
-		}else {
-			return "redirect:showClassProUpdate.do?id="+cla.getId();
-		}
+//		if(flag) {
+//			return "redirect:showClassPro.do";
+//		}else {
+//			return "redirect:showClassProUpdate.do?id="+cla.getId();
+//		}
+		return flag;
+	}
+	@RequestMapping("searchMClass")
+	@ResponseBody
+	public List<MClass> searchMClass(MClass mc) {
+		List<MClass> mcList = proService.searchMClass(mc);
+		return mcList;
+	}
+	@RequestMapping("deleteMClass")
+	@ResponseBody
+	public boolean deleteMClass(MClass mc) {
+		boolean flag = proService.deleteMClass(mc);
+		return flag;
+	}
+	@RequestMapping("updateMClass")
+	@ResponseBody
+	public boolean updateMClass(MClass mc) {
+		boolean flag = proService.updateMClass(mc); 
+		return flag;
 	}
 }

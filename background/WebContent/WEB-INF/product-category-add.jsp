@@ -29,28 +29,29 @@
 		<div class="type_title">产品类型信息</div>
 		<div class="type_content">
 			<div class="Operate_btn">
-				<a href="showClassPro.do" class="btn  btn-warning"><i
+				<a  class="btn  btn-warning addBtn"><i
 					class="icon-edit align-top bigger-125"></i>新增子类型</a> <a
 					href="javascript:ovid()" class="btn  btn-success"><i
 					class="icon-ok align-top bigger-125"></i>禁用该类型</a> <a
 					href="javascript:ovid()" class="btn  btn-danger"><i
 					class="icon-trash   align-top bigger-125"></i>删除该类型</a>
 			</div>
-			<form action="addClasses.do" method="post" class="form form-horizontal"
-				id="form-user-add">
-				<div class="Operate_cont clearfix">
+			<div class="form form-horizontal" id="form-user-add">
+				<div id="xinzeng">
+				<div class="Operate_cont clearfix classes">
 					<label class="form-label"><span class="c-red">*</span>分类名称：</label>
 					<div class="formControls ">
-						<input type="text" class="input-text" value="" placeholder=""
+						<input type="text" class="input-text className" value="" placeholder=""
 							id="user-name" name="name">
 					</div>
 				</div>
+				</div>
 				<div class="">
 					<div class="" style="text-align: center">
-						<input class="btn btn-primary radius" type="submit" value="提交">
+						<input class="btn btn-primary radius submitBtn" type="button" value="提交">
 					</div>
 				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 	</div>
@@ -77,6 +78,38 @@
 					parent.layer.close(index);
 				}
 			});
+			$(".addBtn").click(function() {
+                var str="<div class='Operate_cont clearfix mclass'><label class='form-label'><span class='c-red'>*</span>品牌：</label><div class='formControls '><input type='text' class='input-text newMClass' value='' placeholder=''id='' name=''></div><input type='button' value='删除' class='newDelete'></div>";
+				$("#xinzeng").append(str);
+			})
+			$(document).on("click",".newDelete",function() {
+				var parent = $(this).parent();
+				parent.remove();
+			})
+			var  mclassNames="";
+			$(document).on("click",".submitBtn",function() {
+				$(".newMClass").each(function(index,element){
+					mclassNames+=$(this).val()+",";
+				})
+				mclassNames=mclassNames.substring(0,mclassNames.length-1);
+				var className = $(".className").val();
+				$.ajax({
+					url:"addClasses.do",
+					type:"post",
+					data:{
+					name:className,
+					mclassNames:mclassNames},
+					dataType:"text",
+					success:function(data){
+						if(data=="true"){
+							location.href="showClassPro.do";
+							window.parent.location.reload();
+						}
+					}					
+				})
+			})
+			
+			
 		});
 	</script>
 </body>

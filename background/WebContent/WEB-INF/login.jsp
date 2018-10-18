@@ -140,4 +140,9 @@
 		}
 
 	})
+	if(self!=top){  
+        //不是顶层页面  
+          alert("您的登陆已超时，请重新登陆！");  
+          top.location.href="showLogin.do";  
+    }
 </script>
